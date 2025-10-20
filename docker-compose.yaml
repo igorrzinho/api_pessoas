@@ -1,0 +1,34 @@
+services:
+  api-dotnet:
+    container_name: pessoas-api
+    build: 
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - 4652:8080
+    networks:
+      pessoas-network:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on: ["api-sql"]
+  api-sql:
+    container_name: sqlserver_api
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports: 
+      - "1433:1433"
+    environment: 
+      MSSQL_SA_PASSWORD: "ola@mundo123"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - "pessoas-api-mssql:/var/opt/mssql"
+    networks:
+      pessoas-network:
+        aliases:
+          - "sql"
+
+volumes:
+  pessoas-api-mssql:
+
+networks:
+  pessoas-network:
+    driver: bridge

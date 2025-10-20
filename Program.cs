@@ -18,6 +18,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+{
+    var scope = app.Services.CreateScope();
+    var dbcontext = scope.ServiceProvider.GetRequiredService<PessoaContext>();
+    dbcontext.Database.EnsureCreated();
+}
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
